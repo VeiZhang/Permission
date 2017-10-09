@@ -1,4 +1,32 @@
 apply plugin: 'com.android.library'
+apply plugin: 'com.novoda.bintray-release'
+
+buildscript {
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:2.3.3'
+        classpath 'com.novoda:bintray-release:0.3.4'
+        // NOTE: Do not place your application dependencies here; they belong
+        // in the individual module build.gradle files
+    }
+}
+
+allprojects {
+    repositories {
+        jcenter()
+    }
+
+    /**避免中文注释:编码GBK的不可映射字符**/
+    tasks.withType(Javadoc) {
+        options {
+            encoding "UTF-8"
+            charSet 'UTF-8'
+            links "http://docs.oracle.com/javase/7/docs/api"
+        }
+    }
+}
 
 android {
     compileSdkVersion 25
@@ -28,4 +56,20 @@ dependencies {
     })
     compile 'com.android.support:appcompat-v7:25.+'
     testCompile 'junit:junit:4.12'
+}
+
+/**避免Javadocs错误:找不到引用**/
+tasks.withType(Javadoc) {
+    options.addStringOption('Xdoclint:none', '-quiet')
+    options.addStringOption('encoding', 'UTF-8')
+}
+
+/**发布到我的Bintray仓库**/
+publish {
+    userOrg = 'veizhang'
+    groupId = 'com.excellence'
+    artifactId = 'permission'
+    publishVersion = '1.0.0'
+    desc = 'Android权限管理'
+    website = 'https://github.com/VeiZhang/Permission'
 }
