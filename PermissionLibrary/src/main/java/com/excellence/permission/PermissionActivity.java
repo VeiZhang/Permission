@@ -45,6 +45,8 @@ public final class PermissionActivity extends Activity
 		String[] permissions = intent.getStringArrayExtra(KEY_PERMISSIONS);
 		if (permissions == null || permissions.length == 0)
 		{
+			mOnRationaleListener = null;
+			mOnRequestPermissionsListener = null;
 			finish();
 			return;
 		}
