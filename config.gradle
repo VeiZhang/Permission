@@ -1,0 +1,75 @@
+ext {
+    ARTIFACT_ID = 'permission'
+    VERSION_NAME = '1.0.0'
+    VERSION_CODE = 1 //your version
+
+    DESCRIPTION = 'Android权限管理'
+
+    SITE_URL = 'https://github.com/VeiZhang/Permission'
+    GIT_URL = 'git@github.com:VeiZhang/Permission.git'
+    GROUP_NAME = 'com.excellence'
+    COMPILE_SDK = 25
+    BUILD_TOOLS = '25.0.0'
+
+    MODULE_NAME = 'PermissionLibrary'
+
+    LICENSE_NAME = 'The Apache Software License, Version 2.0'
+    LICENSE_URL = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+
+    DEVELOPER_ID = 'VeiZhang'
+    DEVELOPER_NAME = 'Tiimor'
+    DEVELOPER_EMAIL = 'tiimor@qq.com'
+
+    IS_UPLOADING = project.getGradle().startParameter.taskNames.any { it.contains('bintrayUpload') }
+}
+
+subprojects {
+    group = GROUP_NAME
+    version = VERSION_NAME
+
+    if (IS_UPLOADING && project.name in [MODULE_NAME]) {
+        println project.name
+        apply plugin: 'maven'
+
+        gradle.taskGraph.whenReady { taskGraph ->
+            taskGraph.getAllTasks().find {
+                it.path == ":$project.name:generatePomFileForMavenPublication"
+            }.doLast {
+                file("build/publications/maven/pom-default.xml").delete()
+                println 'Overriding pom-file to make sure we can sync to maven central!'
+                pom {
+                    //noinspection GroovyAssignabilityCheck
+                    project {
+                        name "$project.name"
+                        artifactId ARTIFACT_ID
+                        packaging project.name == 'compiler' ? 'jar' : 'aar'
+                        description DESCRIPTION
+                        url SITE_URL
+                        version VERSION_NAME
+
+                        scm {
+                            url SITE_URL
+                            connection GIT_URL
+                            developerConnection GIT_URL
+                        }
+
+                        licenses {
+                            license {
+                                name LICENSE_NAME
+                                url LICENSE_URL
+                            }
+                        }
+
+                        developers {
+                            developer {
+                                id DEVELOPER_ID
+                                name DEVELOPER_NAME
+                                email DEVELOPER_EMAIL
+                            }
+                        }
+                    }
+                }.writeTo("build/publications/maven/pom-default.xml")
+            }
+        }
+    }
+}
