@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.provider.Settings;
+import android.support.annotation.StringRes;
 
 /**
  * <pre>
@@ -21,11 +22,59 @@ public class SettingDialog
 	private AlertDialog.Builder mBuilder = null;
 	private Context mContext = null;
 
-	protected SettingDialog(Context context)
+	public SettingDialog(Context context)
 	{
 		mContext = context;
 		mBuilder = new AlertDialog.Builder(mContext).setCancelable(false).setTitle(R.string.permission_title_permission_failed).setMessage(R.string.permission_message_permission_failed)
 				.setPositiveButton(R.string.permission_setting, mListener).setNegativeButton(R.string.permission_cancel, mListener);
+	}
+
+	public SettingDialog setTitle(@StringRes int titleId)
+	{
+		mBuilder.setTitle(titleId);
+		return this;
+	}
+
+	public SettingDialog setTitle(CharSequence title)
+	{
+		mBuilder.setTitle(title);
+		return this;
+	}
+
+	public SettingDialog setMessage(@StringRes int messageId)
+	{
+		mBuilder.setMessage(messageId);
+		return this;
+	}
+
+	public SettingDialog setMessage(CharSequence message)
+	{
+		mBuilder.setMessage(message);
+		return this;
+	}
+
+	public SettingDialog setPositiveButton(@StringRes int textId)
+	{
+		mBuilder.setPositiveButton(textId, mListener);
+		return this;
+	}
+
+	public SettingDialog setPositiveButton(CharSequence text)
+	{
+		mBuilder.setPositiveButton(text, mListener);
+		return this;
+	}
+
+	public SettingDialog setNegativeButton(@StringRes int textId)
+	{
+		mBuilder.setNegativeButton(textId, mListener);
+		return this;
+	}
+
+	public SettingDialog setNegativeButton(CharSequence text)
+	{
+		mBuilder.setNegativeButton(text, mListener);
+		return this;
 	}
 
 	private DialogInterface.OnClickListener mListener = new DialogInterface.OnClickListener()
