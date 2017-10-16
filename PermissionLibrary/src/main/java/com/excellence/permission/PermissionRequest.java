@@ -7,12 +7,15 @@ import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
 import android.support.annotation.Size;
+import android.support.v4.app.AppOpsManagerCompat;
 import android.support.v4.content.ContextCompat;
+import android.text.TextUtils;
 
 import com.excellence.permission.PermissionActivity.OnRationaleListener;
 import com.excellence.permission.PermissionActivity.OnRequestPermissionsListener;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -40,12 +43,23 @@ public class PermissionRequest
 		mPermissionListener = new PermissionListener(listener);
 	}
 
+	/**
+	 * 设置权限拒绝策略-合理提示的监听{@link PermissionActivity.OnRationaleListener}
+	 *
+	 * @param onRationaleListener
+	 * @return
+	 */
 	public PermissionRequest setOnRationaleListener(OnRationaleListener onRationaleListener)
 	{
 		mOnRationaleListener = onRationaleListener;
 		return this;
 	}
 
+	/**
+	 * 开始申请，判断权限是否拒绝过
+	 *
+	 * @param permissions
+	 */
 	public void request(@Size(min = 1) String... permissions)
 	{
 		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M)
@@ -65,11 +79,19 @@ public class PermissionRequest
 		}
 	}
 
+	/**
+	 * 开始申请，判断权限是否拒绝过
+	 *
+	 * @param permissions
+	 */
 	public void request(@Size(min = 1) List<String> permissions)
 	{
 		request(permissions.toArray(new String[permissions.size()]));
 	}
 
+	/**
+	 * 申请权限
+	 */
 	@RequiresApi(api = Build.VERSION_CODES.M)
 	public void resume()
 	{
@@ -85,7 +107,14 @@ public class PermissionRequest
 		mContext.startActivity(intent);
 	}
 
-	private String[] getDeniedPermissions(Context context, String[] permissions)
+	/**
+	 * 检测未授权的权限
+	 *
+	 * @param context
+	 * @param permissions
+	 * @return
+	 */
+	public static String[] getDeniedPermissions(@NonNull Context context, @NonNull String[] permissions)
 	{
 		List<String> deniedPermissions = new ArrayList<>();
 		for (String permission : permissions)
@@ -94,6 +123,44 @@ public class PermissionRequest
 				deniedPermissions.add(permission);
 		}
 		return deniedPermissions.toArray(new String[deniedPermissions.size()]);
+	}
+
+	/**
+	 * 检测权限
+	 *
+	 * @param context
+	 * @param permissions
+	 * @return
+	 */
+	public static boolean hasPermission(@NonNull Context context, @NonNull List<String> permissions)
+	{
+		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M)
+			return true;
+		for (String permission : permissions)
+		{
+			String op = AppOpsManagerCompat.permissionToOp(permission);
+			if (TextUtils.isEmpty(op))
+				continue;
+			int result = AppOpsManagerCompat.noteProxyOp(context, op, context.getPackageName());
+			if (result == AppOpsManagerCompat.MODE_IGNORED)
+				return false;
+			result = ContextCompat.checkSelfPermission(context, permission);
+			if (result != PackageManager.PERMISSION_GRANTED)
+				return false;
+		}
+		return true;
+	}
+
+	/**
+	 * 检测权限
+	 * 
+	 * @param context
+	 * @param permissions
+	 * @return
+	 */
+	public static boolean hasPermission(@NonNull Context context, @NonNull String... permissions)
+	{
+		return hasPermission(context, Arrays.asList(permissions));
 	}
 
 	private class PermissionListener implements IPermissionListener
