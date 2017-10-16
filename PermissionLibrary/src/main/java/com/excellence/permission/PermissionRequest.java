@@ -1,5 +1,6 @@
 package com.excellence.permission;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -44,7 +45,7 @@ public class PermissionRequest
 	}
 
 	/**
-	 * 设置权限拒绝策略-合理提示的监听{@link PermissionActivity.OnRationaleListener}
+	 * 设置权限拒绝策略-“不再提示”合理提示的监听{@link PermissionActivity.OnRationaleListener}
 	 *
 	 * @param onRationaleListener
 	 * @return
@@ -56,7 +57,7 @@ public class PermissionRequest
 	}
 
 	/**
-	 * 开始申请，判断权限是否拒绝过
+	 * 开始申请，判断权限是否拒绝过-“不再提示”
 	 *
 	 * @param permissions
 	 */
@@ -80,7 +81,7 @@ public class PermissionRequest
 	}
 
 	/**
-	 * 开始申请，判断权限是否拒绝过
+	 * 开始申请，判断权限是否拒绝过-“不再提示”
 	 *
 	 * @param permissions
 	 */
@@ -112,7 +113,7 @@ public class PermissionRequest
 	 *
 	 * @param context
 	 * @param permissions
-	 * @return
+	 * @return 返回未授权的权限
 	 */
 	public static String[] getDeniedPermissions(@NonNull Context context, @NonNull String[] permissions)
 	{
@@ -130,7 +131,7 @@ public class PermissionRequest
 	 *
 	 * @param context
 	 * @param permissions
-	 * @return
+	 * @return {@code true}:授权<br>{@code false}:未授权
 	 */
 	public static boolean hasPermission(@NonNull Context context, @NonNull List<String> permissions)
 	{
@@ -156,11 +157,44 @@ public class PermissionRequest
 	 * 
 	 * @param context
 	 * @param permissions
-	 * @return
+	 * @return {@code true}:授权<br>{@code false}:未授权
 	 */
 	public static boolean hasPermission(@NonNull Context context, @NonNull String... permissions)
 	{
 		return hasPermission(context, Arrays.asList(permissions));
+	}
+
+	/**
+	 * 在{@link IPermissionListener#onPermissionsDenied()}中，即第一次是否拒绝，判断权限是否被拒绝-不再提示
+	 *
+	 * @param activity
+	 * @param deniedPermissions
+	 * @return {@code true}:选择“不再提示”<br>{@code false}:未选择“不再提示”
+	 */
+	public static boolean hasAlwaysDeniedPermission(@NonNull Activity activity, @NonNull List<String> deniedPermissions)
+	{
+		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M)
+			return false;
+
+		for (String permission : deniedPermissions)
+		{
+			boolean rationale = activity.shouldShowRequestPermissionRationale(permission);
+			if (!rationale)
+				return true;
+		}
+		return false;
+	}
+
+	/**
+	 * 在{@link IPermissionListener#onPermissionsDenied()}中，即第一次是否拒绝，判断权限是否被拒绝-不再提示
+	 * 
+	 * @param activity
+	 * @param deniedPermissions
+	 * @return {@code true}:选择“不再提示”<br>{@code false}:未选择“不再提示”
+	 */
+	public static boolean hasAlwaysDeniedPermission(@NonNull Activity activity, @NonNull String... deniedPermissions)
+	{
+		return hasAlwaysDeniedPermission(activity, Arrays.asList(deniedPermissions));
 	}
 
 	private class PermissionListener implements IPermissionListener
