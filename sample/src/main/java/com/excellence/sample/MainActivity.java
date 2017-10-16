@@ -95,17 +95,24 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 		}).request(WRITE_EXTERNAL_STORAGE);
 	}
 
+	/**
+	 * 如果用户点击“不再提示”，则显示提示框，进入Setting里设置权限
+	 */
 	private void checkDeniedPermission()
 	{
 		if (PermissionRequest.hasAlwaysDeniedPermission(MainActivity.this, WRITE_EXTERNAL_STORAGE))
 		{
-			if (PermissionRequest.hasAlwaysDeniedPermission(MainActivity.this, WRITE_EXTERNAL_STORAGE))
-			{
-				new SettingDialog(MainActivity.this).show();
-			}
+			new SettingDialog(MainActivity.this).show();
 		}
 	}
 
+	/**
+	 * 用于接收SettingDialog的startActivityForResult结果{@link SettingDialog#mListener#startActivityForResult(Intent, int)}
+	 *
+	 * @param requestCode
+	 * @param resultCode
+	 * @param data
+	 */
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data)
 	{

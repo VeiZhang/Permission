@@ -68,11 +68,31 @@ tasks.withType(Javadoc) {
 }
 
 /**发布到我的Bintray仓库**/
+def key = getBintrayKey()
+
 publish {
+    bintrayUser = 'veizhang'
+    bintrayKey = key
+    dryRun = false
     userOrg = 'veizhang'
     groupId = 'com.excellence'
     artifactId = 'permission'
     publishVersion = '1.0.0'
     desc = 'Android权限管理'
     website = 'https://github.com/VeiZhang/Permission'
+    licences = ['Apache-2.0']
+}
+
+/**读取bintray.key文件的key**/
+def getBintrayKey() {
+    File file = project.rootProject.file('bintray.Key')
+    if (!file.exists())
+        return null
+
+    InputStream inputStream = file.newDataInputStream();
+    Properties properties = new Properties()
+    properties.load(inputStream)
+
+    //读取Key
+    return properties.getProperty('bintrayKey')
 }
