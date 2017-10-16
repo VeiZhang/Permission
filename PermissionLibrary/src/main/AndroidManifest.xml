@@ -6,7 +6,12 @@
         android:label="@string/app_name"
         android:supportsRtl="true">
 
-        <activity android:name="com.excellence.permission.PermissionActivity"/>
+        <activity
+            android:name=".PermissionActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:launchMode="standard"
+            android:theme="@style/permission"
+            android:windowSoftInputMode="stateHidden|stateAlwaysHidden"/>
 
     </application>
 

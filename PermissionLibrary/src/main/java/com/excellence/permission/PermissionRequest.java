@@ -35,25 +35,12 @@ public class PermissionRequest
 
 	private Context mContext = null;
 	private IPermissionListener mPermissionListener = null;
-	private OnRationaleListener mOnRationaleListener = null;
 	private String[] mDeniedPermissions = null;
 
 	public PermissionRequest(@NonNull Context context, IPermissionListener listener)
 	{
 		mContext = context;
 		mPermissionListener = new PermissionListener(listener);
-	}
-
-	/**
-	 * 设置权限拒绝策略-“不再提示”合理提示的监听{@link PermissionActivity.OnRationaleListener}
-	 *
-	 * @param onRationaleListener
-	 * @return
-	 */
-	public PermissionRequest setOnRationaleListener(OnRationaleListener onRationaleListener)
-	{
-		mOnRationaleListener = onRationaleListener;
-		return this;
 	}
 
 	/**
@@ -165,7 +152,7 @@ public class PermissionRequest
 	}
 
 	/**
-	 * 在{@link IPermissionListener#onPermissionsDenied()}中，即第一次是否拒绝，判断权限是否被拒绝-不再提示
+	 * 在{@link IPermissionListener#onPermissionsDenied()}中，即在权限申请失败的时候，判断权限是否被拒绝-不再提示
 	 *
 	 * @param activity
 	 * @param deniedPermissions
@@ -186,7 +173,7 @@ public class PermissionRequest
 	}
 
 	/**
-	 * 在{@link IPermissionListener#onPermissionsDenied()}中，即第一次是否拒绝，判断权限是否被拒绝-不再提示
+	 * 在{@link IPermissionListener#onPermissionsDenied()}中，即在权限申请失败的时候，判断权限是否被拒绝-不再提示
 	 * 
 	 * @param activity
 	 * @param deniedPermissions
@@ -246,15 +233,7 @@ public class PermissionRequest
 		@RequiresApi(api = Build.VERSION_CODES.M)
 		public void onRationaleResult(boolean showRationale)
 		{
-			if (showRationale)
-			{
-				if (mOnRationaleListener != null)
-					mOnRationaleListener.onRationaleResult(showRationale);
-				else
-					new SettingDialog(mContext).show();
-			}
-			else
-				resume();
+			resume();
 		}
 	}
 }

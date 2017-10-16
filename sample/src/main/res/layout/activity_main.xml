@@ -22,18 +22,4 @@
         android:text="申请多个权限"
         android:textAllCaps="false"/>
 
-    <Button
-        android:id="@+id/request_default_refuse"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="申请拒绝后重试[默认弹框]"
-        android:textAllCaps="false"/>
-
-    <Button
-        android:id="@+id/request_custom_retry"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="申请拒绝后重试[自定义弹框]"
-        android:textAllCaps="false"/>
-
 </LinearLayout>

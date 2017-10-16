@@ -1,5 +1,6 @@
 package com.excellence.permission;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -13,12 +14,14 @@ import android.support.annotation.StringRes;
  *     author : VeiZhang
  *     blog   : http://tiimor.cn
  *     time   : 2017/9/29
- *     desc   : 权限[拒绝]的默认提示弹框，可以自定义在接口{@link PermissionRequest#setOnRationaleListener}
+ *     desc   : 权限拒绝[不再提示]的默认提示弹框
  * </pre>
  */
 
 public class SettingDialog
 {
+	public static final int PERMISSION_REQUEST_CODE = 1024;
+
 	private AlertDialog.Builder mBuilder = null;
 	private Context mContext = null;
 
@@ -88,7 +91,10 @@ public class SettingDialog
 				Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
 				Uri uri = Uri.fromParts("package", mContext.getPackageName(), null);
 				intent.setData(uri);
-				mContext.startActivity(intent);
+				if (mContext instanceof Activity)
+					((Activity) mContext).startActivityForResult(intent, PERMISSION_REQUEST_CODE);
+				else
+					mContext.startActivity(intent);
 				break;
 
 			case DialogInterface.BUTTON_NEGATIVE:
