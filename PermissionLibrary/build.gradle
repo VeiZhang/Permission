@@ -85,7 +85,7 @@ publish {
 
 /**读取bintray.key文件的key**/
 def getBintrayKey() {
-    File file = project.rootProject.file('bintray.Key')
+    File file = project.rootProject.file('../../bintray.key')
     if (!file.exists())
         return null
 
