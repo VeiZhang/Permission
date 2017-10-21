@@ -53,8 +53,8 @@ public final class PermissionActivity extends Activity
 		super.onCreate(savedInstanceState);
 
 		Intent intent = getIntent();
-		String[] permissions = intent.getStringArrayExtra(KEY_PERMISSIONS);
-		if (permissions == null || permissions.length == 0)
+		List<String> permissions = intent.getStringArrayListExtra(KEY_PERMISSIONS);
+		if (permissions == null || permissions.size() == 0)
 		{
 			mOnRationaleListener = null;
 			mOnRequestPermissionsListener = null;
@@ -94,7 +94,7 @@ public final class PermissionActivity extends Activity
 		}
 
 		if (mOnRequestPermissionsListener != null)
-			requestPermissions(permissions, 1);
+			requestPermissions(permissions.toArray(new String[permissions.size()]), 1);
 	}
 
 	@Override

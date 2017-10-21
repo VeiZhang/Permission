@@ -49,32 +49,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 	}
 
 	/**
-	 * 申请多个权限
-	 */
-	private void multiRequest()
-	{
-		new PermissionRequest(this, new IPermissionListener()
-		{
-			@Override
-			public void onPermissionsGranted()
-			{
-				Toast.makeText(MainActivity.this, "申请多个权限成功", Toast.LENGTH_SHORT).show();
-			}
-
-			@Override
-			public void onPermissionsDenied()
-			{
-				Toast.makeText(MainActivity.this, "申请多个权限失败", Toast.LENGTH_SHORT).show();
-			}
-		}).request(READ_CONTACTS, CAMERA);
-	}
-
-	/**
 	 * 申请单个权限
 	 */
 	private void singleRequest()
 	{
-		new PermissionRequest(this, new IPermissionListener()
+		PermissionRequest.with(this).permission(WRITE_EXTERNAL_STORAGE).request(new IPermissionListener()
 		{
 
 			@Override
@@ -88,7 +67,28 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 			{
 				Toast.makeText(MainActivity.this, "申请单个权限失败", Toast.LENGTH_SHORT).show();
 			}
-		}).request(WRITE_EXTERNAL_STORAGE);
+		});
+	}
+
+	/**
+	 * 申请多个权限
+	 */
+	private void multiRequest()
+	{
+		PermissionRequest.with(this).permission(READ_CONTACTS, CAMERA).request(new IPermissionListener()
+		{
+			@Override
+			public void onPermissionsGranted()
+			{
+				Toast.makeText(MainActivity.this, "申请多个权限成功", Toast.LENGTH_SHORT).show();
+			}
+
+			@Override
+			public void onPermissionsDenied()
+			{
+				Toast.makeText(MainActivity.this, "申请多个权限失败", Toast.LENGTH_SHORT).show();
+			}
+		});
 	}
 
 }

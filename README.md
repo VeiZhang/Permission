@@ -11,7 +11,7 @@ compile 'com.excellence:permission:1.0.0'
 
 ## 说明
 
-Android6.0以后，动态申请权限，用户点击来确定是否授权，分三种情况：授权、拒绝、拒绝-不再提示。前两种比较好理解，第三种“拒绝-不再提示”，即用户选择了“不再提示”，则再次使用动态权限申请，不弹出授权框，用户无法授权，这种情况在授权失败处，检测是否“不再提示”，“是”则自定义弹框，让用户进入Setting的apk中授权。
+Android6.0以后，动态申请权限，用户点击来确定是否授权，分三种情况：授权、拒绝、拒绝-不再提示。前两种比较好理解，第三种“拒绝-不再提示”，即用户选择了“不再提示”，则再次使用动态权限申请，不弹出授权框，用户无法授权，这种情况在授权失败处，检测是否“不再提示”，选中“不再提示”后下次申请，系统权限申请框没反应，只能自定义弹框：提示用户进入Setting，让用户进入Setting的apk中授权。
 
 ## 示例
 
@@ -21,7 +21,7 @@ Android6.0以后，动态申请权限，用户点击来确定是否授权，分�
  */
 private void singleRequest()
 {
-    new PermissionRequest(this, new IPermissionListener()
+    PermissionRequest.with(this).permission(WRITE_EXTERNAL_STORAGE).request(new IPermissionListener()
     {
 
         @Override
@@ -35,7 +35,7 @@ private void singleRequest()
         {
             Toast.makeText(MainActivity.this, "申请单个权限失败", Toast.LENGTH_SHORT).show();
         }
-    }).request(WRITE_EXTERNAL_STORAGE);
+    });
 }
 
 /**
@@ -43,7 +43,7 @@ private void singleRequest()
  */
 private void multiRequest()
 {
-    new PermissionRequest(this, new IPermissionListener()
+    PermissionRequest.with(this).permission(READ_CONTACTS, CAMERA).request(new IPermissionListener()
     {
         @Override
         public void onPermissionsGranted()
@@ -56,7 +56,7 @@ private void multiRequest()
         {
             Toast.makeText(MainActivity.this, "申请多个权限失败", Toast.LENGTH_SHORT).show();
         }
-    }).request(READ_CONTACTS, CAMERA);
+    });
 }
 ```
 
@@ -70,7 +70,7 @@ private void multiRequest()
 ## 修改日志
 | 版本 | 描述 |
 | --- | ---- |
-| [1.0.0][permission1.0.0] | Android6.0动态申请权限 |
+| [1.0.0][permission1.0.0] | Android6.0动态申请权限 **2017-10-21** |
 
 <!-- 网站链接 -->
 

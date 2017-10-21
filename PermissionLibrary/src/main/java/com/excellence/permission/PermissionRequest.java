@@ -34,29 +34,58 @@ public class PermissionRequest
 
 	private Context mContext = null;
 	private IPermissionListener mPermissionListener = null;
-	private String[] mDeniedPermissions = null;
+	private List<String> mRequestPermissions = null;
+	private List<String> mDeniedPermissions = null;
 
-	public PermissionRequest(@NonNull Context context, IPermissionListener listener)
+	@NonNull
+	public static PermissionRequest with(Context context)
+	{
+		return new PermissionRequest(context);
+	}
+
+	public PermissionRequest(Context context)
 	{
 		mContext = context;
-		mPermissionListener = new PermissionListener(listener);
+		mRequestPermissions = new ArrayList<>();
+	}
+
+	/**
+	 * 设置待授权的权限
+	 *
+	 * @param permissions 待授权的权限
+	 */
+	public PermissionRequest permission(@Size(min = 1) List<String> permissions)
+	{
+		mRequestPermissions.addAll(permissions);
+		return this;
+	}
+
+	/**
+	 * 设置待授权的权限
+	 *
+	 * @param permissions 待授权的权限
+	 */
+	public PermissionRequest permission(@Size(min = 1) String... permissions)
+	{
+		return permission(Arrays.asList(permissions));
 	}
 
 	/**
 	 * 开始申请，判断权限是否拒绝过-“不再提示”
 	 *
-	 * @param permissions
+	 * @param listener
 	 */
-	public void request(@Size(min = 1) String... permissions)
+	public void request(IPermissionListener listener)
 	{
+		mPermissionListener = new RequestListener(listener);
 		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M)
 		{
 			mPermissionListener.onPermissionsGranted();
 		}
 		else
 		{
-			mDeniedPermissions = getDeniedPermissions(mContext, permissions);
-			if (mDeniedPermissions.length > 0)
+			mDeniedPermissions = getDeniedPermissions(mContext, mRequestPermissions);
+			if (mDeniedPermissions.size() > 0)
 			{
 				PermissionActivity.setOnRationaleListener(new RationaleListener());
 				startPermissionActivity();
@@ -64,16 +93,6 @@ public class PermissionRequest
 			else
 				mPermissionListener.onPermissionsGranted();
 		}
-	}
-
-	/**
-	 * 开始申请，判断权限是否拒绝过-“不再提示”
-	 *
-	 * @param permissions
-	 */
-	public void request(@Size(min = 1) List<String> permissions)
-	{
-		request(permissions.toArray(new String[permissions.size()]));
 	}
 
 	/**
@@ -89,7 +108,7 @@ public class PermissionRequest
 	private void startPermissionActivity()
 	{
 		Intent intent = new Intent(mContext, PermissionActivity.class);
-		intent.putExtra(PermissionActivity.KEY_PERMISSIONS, mDeniedPermissions);
+		intent.putStringArrayListExtra(PermissionActivity.KEY_PERMISSIONS, (ArrayList<String>) mDeniedPermissions);
 		intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 		mContext.startActivity(intent);
 	}
@@ -101,7 +120,7 @@ public class PermissionRequest
 	 * @param permissions
 	 * @return 返回未授权的权限
 	 */
-	public static String[] getDeniedPermissions(@NonNull Context context, @NonNull String[] permissions)
+	public static List<String> getDeniedPermissions(@NonNull Context context, @NonNull List<String> permissions)
 	{
 		List<String> deniedPermissions = new ArrayList<>();
 		for (String permission : permissions)
@@ -109,7 +128,7 @@ public class PermissionRequest
 			if (ContextCompat.checkSelfPermission(context, permission) != PackageManager.PERMISSION_GRANTED)
 				deniedPermissions.add(permission);
 		}
-		return deniedPermissions.toArray(new String[deniedPermissions.size()]);
+		return deniedPermissions;
 	}
 
 	/**
@@ -183,11 +202,11 @@ public class PermissionRequest
 		return hasAlwaysDeniedPermission(activity, Arrays.asList(deniedPermissions));
 	}
 
-	private class PermissionListener implements IPermissionListener
+	private class RequestListener implements IPermissionListener
 	{
 		private IPermissionListener mListener = null;
 
-		public PermissionListener(IPermissionListener listener)
+		public RequestListener(IPermissionListener listener)
 		{
 			mListener = listener;
 		}
