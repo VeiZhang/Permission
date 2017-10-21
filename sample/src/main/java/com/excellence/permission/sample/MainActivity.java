@@ -1,4 +1,4 @@
-package com.excellence.sample;
+package com.excellence.permission.sample;
 
 import android.content.Intent;
 import android.os.Bundle;

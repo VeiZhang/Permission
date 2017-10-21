@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:gravity="center"
     android:orientation="vertical"
-    tools:context="com.excellence.sample.MainActivity">
+    tools:context="com.excellence.permission.sample.MainActivity">
 
     <Button
         android:id="@+id/request_single"

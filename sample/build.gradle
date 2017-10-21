@@ -5,7 +5,7 @@ android {
     buildToolsVersion "25.0.0"
 
     defaultConfig {
-        applicationId "com.excellence.sample"
+        applicationId "com.excellence.permission.sample"
         minSdkVersion 15
         targetSdkVersion 25
         versionCode 1
