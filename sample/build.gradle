@@ -29,5 +29,6 @@ dependencies {
     })
     compile 'com.android.support:appcompat-v7:25.+'
     testCompile 'junit:junit:4.12'
-    compile project(':PermissionLibrary')
+    // compile project(':PermissionLibrary')
+    compile 'com.excellence:permission:1.0.0'
 }
