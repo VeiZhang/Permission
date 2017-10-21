@@ -11,7 +11,14 @@ package com.excellence.permission;
 
 public interface IPermissionListener
 {
+	/**
+	 * 授权
+	 */
 	void onPermissionsGranted();
 
+	/**
+	 * 未授权
+	 */
 	void onPermissionsDenied();
+
 }

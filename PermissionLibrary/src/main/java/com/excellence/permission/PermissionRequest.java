@@ -34,6 +34,7 @@ public class PermissionRequest
 
 	private Context mContext = null;
 	private IPermissionListener mPermissionListener = null;
+	private IRationaleListener mRationaleListener = null;
 	private List<String> mRequestPermissions = null;
 	private List<String> mDeniedPermissions = null;
 
@@ -71,6 +72,19 @@ public class PermissionRequest
 	}
 
 	/**
+	 * 默认提示{@link SettingDialog#show}，进入Setting应用设置权限
+	 * 可以自定义弹框提示用户去设置，请参考{@link SettingDialog}
+	 * 
+	 * @param listener
+	 * @return
+	 */
+	public PermissionRequest rationale(IRationaleListener listener)
+	{
+		mRationaleListener = listener;
+		return this;
+	}
+
+	/**
 	 * 开始申请，判断权限是否拒绝过-“不再提示”
 	 *
 	 * @param listener
@@ -101,7 +115,8 @@ public class PermissionRequest
 	@RequiresApi(api = Build.VERSION_CODES.M)
 	public void resume()
 	{
-		PermissionActivity.setOnRequestPermissionsListener(mPermissionListener);
+		PermissionActivity.setRequestPermissionsListener(mPermissionListener);
+		PermissionActivity.setRequestRationaleListener(mRationaleListener);
 		startPermissionActivity();
 	}
 

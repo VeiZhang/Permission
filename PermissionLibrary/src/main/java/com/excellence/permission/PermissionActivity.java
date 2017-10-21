@@ -32,18 +32,24 @@ public final class PermissionActivity extends Activity
 	public static final String KEY_PERMISSIONS = "KEY_PERMISSIONS";
 
 	private static OnRationaleListener mOnRationaleListener = null;
-	private static IPermissionListener mOnRequestPermissionsListener = null;
+	private static IPermissionListener mRequestPermissionsListener = null;
+	private static IRationaleListener mRequestRationaleListener = null;
 
-	private List<String> mDeniedPermissions = null;
+	private List<String> mDeniedPermissions = new ArrayList<>();
 
 	public static void setOnRationaleListener(OnRationaleListener listener)
 	{
 		mOnRationaleListener = listener;
 	}
 
-	public static void setOnRequestPermissionsListener(IPermissionListener listener)
+	public static void setRequestPermissionsListener(IPermissionListener listener)
 	{
-		mOnRequestPermissionsListener = listener;
+		mRequestPermissionsListener = listener;
+	}
+
+	public static void setRequestRationaleListener(IRationaleListener listener)
+	{
+		mRequestRationaleListener = listener;
 	}
 
 	@Override
@@ -57,7 +63,7 @@ public final class PermissionActivity extends Activity
 		if (permissions == null || permissions.size() == 0)
 		{
 			mOnRationaleListener = null;
-			mOnRequestPermissionsListener = null;
+			mRequestPermissionsListener = null;
 			finish();
 			return;
 		}
@@ -93,16 +99,15 @@ public final class PermissionActivity extends Activity
 			return;
 		}
 
-		if (mOnRequestPermissionsListener != null)
+		if (mRequestPermissionsListener != null)
 			requestPermissions(permissions.toArray(new String[permissions.size()]), 1);
 	}
 
 	@Override
 	public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults)
 	{
-		if (mOnRequestPermissionsListener != null)
+		if (mRequestPermissionsListener != null)
 		{
-			mDeniedPermissions = new ArrayList<>();
 			for (int i = 0; i < permissions.length; i++)
 			{
 				if (grantResults[i] != PackageManager.PERMISSION_GRANTED)
@@ -120,17 +125,24 @@ public final class PermissionActivity extends Activity
 				 */
 				if (hasAlwaysDeniedPermission(this, mDeniedPermissions))
 				{
-					new SettingDialog(this).setOnCancelListener(new SettingDialog.OnCancelListener()
+					if (mRequestRationaleListener != null)
 					{
-						@Override
-						public void onCancel()
+						mRequestRationaleListener.OnRationale(this);
+					}
+					else
+					{
+						new SettingDialog(this).setOnCancelListener(new SettingDialog.OnCancelListener()
 						{
-							/**
-							 * 点击取消时，认为请求失败
-							 */
-							permissionsDenied();
-						}
-					}).show();
+							@Override
+							public void onCancel()
+							{
+								/**
+								 * 点击取消时，认为请求失败
+								 */
+								permissionsDenied();
+							}
+						}).show();
+					}
 				}
 				else
 				{
@@ -140,17 +152,19 @@ public final class PermissionActivity extends Activity
 		}
 	}
 
-	private void permissionsGranted()
+	public void permissionsGranted()
 	{
-		mOnRequestPermissionsListener.onPermissionsGranted();
-		mOnRequestPermissionsListener = null;
+		mRequestPermissionsListener.onPermissionsGranted();
+		mRequestPermissionsListener = null;
+		mRequestRationaleListener = null;
 		finish();
 	}
 
-	private void permissionsDenied()
+	public void permissionsDenied()
 	{
-		mOnRequestPermissionsListener.onPermissionsDenied();
-		mOnRequestPermissionsListener = null;
+		mRequestPermissionsListener.onPermissionsDenied();
+		mRequestPermissionsListener = null;
+		mRequestRationaleListener = null;
 		finish();
 	}
 
@@ -179,7 +193,7 @@ public final class PermissionActivity extends Activity
 		}
 	}
 
-	public interface OnRationaleListener
+	protected interface OnRationaleListener
 	{
 		void onRationaleResult(boolean showRationale);
 	}

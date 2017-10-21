@@ -7,7 +7,10 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import com.excellence.permission.IPermissionListener;
+import com.excellence.permission.IRationaleListener;
+import com.excellence.permission.PermissionActivity;
 import com.excellence.permission.PermissionRequest;
+import com.excellence.permission.SettingDialog;
 
 import static android.Manifest.permission.CAMERA;
 import static android.Manifest.permission.READ_CONTACTS;
@@ -53,7 +56,24 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 	 */
 	private void singleRequest()
 	{
-		PermissionRequest.with(this).permission(WRITE_EXTERNAL_STORAGE).request(new IPermissionListener()
+		PermissionRequest.with(this).rationale(new IRationaleListener()
+		{
+			@Override
+			public void OnRationale(final PermissionActivity activity)
+			{
+				new SettingDialog(activity).setTitle("Warning").setOnCancelListener(new SettingDialog.OnCancelListener()
+				{
+					@Override
+					public void onCancel()
+					{
+						/**
+						 * 点击取消时，认为请求失败
+						 */
+						activity.permissionsDenied();
+					}
+				}).show();
+			}
+		}).permission(WRITE_EXTERNAL_STORAGE).request(new IPermissionListener()
 		{
 
 			@Override

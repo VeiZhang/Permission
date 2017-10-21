@@ -11,6 +11,7 @@ package com.excellence.permission;
 
 public class PermissionListener implements IPermissionListener
 {
+
 	@Override
 	public void onPermissionsGranted()
 	{
@@ -22,4 +23,5 @@ public class PermissionListener implements IPermissionListener
 	{
 
 	}
+
 }
