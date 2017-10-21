@@ -29,8 +29,8 @@ public class SettingDialog
 	public SettingDialog(Context context)
 	{
 		mContext = context;
-		mBuilder = new AlertDialog.Builder(mContext).setCancelable(false).setTitle(R.string.permission_title_permission_failed).setMessage(R.string.permission_message_permission_failed)
-				.setPositiveButton(R.string.permission_setting, mListener).setNegativeButton(R.string.permission_cancel, mListener);
+		mBuilder = new AlertDialog.Builder(mContext, android.R.style.Theme_DeviceDefault_Light_Dialog).setCancelable(false).setTitle(R.string.permission_title_permission_failed)
+				.setMessage(R.string.permission_message_permission_failed).setPositiveButton(R.string.permission_setting, mListener).setNegativeButton(R.string.permission_cancel, mListener);
 	}
 
 	public SettingDialog setTitle(@StringRes int titleId)
