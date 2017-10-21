@@ -13,7 +13,6 @@ import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
 
 import com.excellence.permission.PermissionActivity.OnRationaleListener;
-import com.excellence.permission.PermissionActivity.OnRequestPermissionsListener;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -83,7 +82,7 @@ public class PermissionRequest
 	@RequiresApi(api = Build.VERSION_CODES.M)
 	public void resume()
 	{
-		PermissionActivity.setOnRequestPermissionsListener(new RequestPermissionsListener());
+		PermissionActivity.setOnRequestPermissionsListener(mPermissionListener);
 		startPermissionActivity();
 	}
 
@@ -205,25 +204,6 @@ public class PermissionRequest
 		{
 			if (mListener != null)
 				mListener.onPermissionsDenied();
-		}
-	}
-
-	private class RequestPermissionsListener implements OnRequestPermissionsListener
-	{
-		@Override
-		public void onRequestPermissionsResult(@NonNull String[] permissions, @NonNull int[] grantResults)
-		{
-			List<String> deniedPermissions = new ArrayList<>();
-			for (int i = 0; i < permissions.length; i++)
-			{
-				if (grantResults[i] != PackageManager.PERMISSION_GRANTED)
-					deniedPermissions.add(permissions[i]);
-			}
-
-			if (deniedPermissions.isEmpty())
-				mPermissionListener.onPermissionsGranted();
-			else
-				mPermissionListener.onPermissionsDenied();
 		}
 	}
 

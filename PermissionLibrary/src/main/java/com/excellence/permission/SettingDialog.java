@@ -24,6 +24,7 @@ public class SettingDialog
 
 	private AlertDialog.Builder mBuilder = null;
 	private Context mContext = null;
+	private OnCancelListener mOnCancelListener = null;
 
 	public SettingDialog(Context context)
 	{
@@ -80,6 +81,12 @@ public class SettingDialog
 		return this;
 	}
 
+	public SettingDialog setOnCancelListener(OnCancelListener onCancelListener)
+	{
+		mOnCancelListener = onCancelListener;
+		return this;
+	}
+
 	private DialogInterface.OnClickListener mListener = new DialogInterface.OnClickListener()
 	{
 		@Override
@@ -98,7 +105,8 @@ public class SettingDialog
 				break;
 
 			case DialogInterface.BUTTON_NEGATIVE:
-
+				if (mOnCancelListener != null)
+					mOnCancelListener.onCancel();
 				break;
 			}
 		}
@@ -107,5 +115,10 @@ public class SettingDialog
 	public void show()
 	{
 		mBuilder.show();
+	}
+
+	public interface OnCancelListener
+	{
+		void onCancel();
 	}
 }

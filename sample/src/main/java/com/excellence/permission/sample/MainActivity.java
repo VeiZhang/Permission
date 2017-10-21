@@ -1,6 +1,5 @@
 package com.excellence.permission.sample;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -9,7 +8,6 @@ import android.widget.Toast;
 
 import com.excellence.permission.IPermissionListener;
 import com.excellence.permission.PermissionRequest;
-import com.excellence.permission.SettingDialog;
 
 import static android.Manifest.permission.CAMERA;
 import static android.Manifest.permission.READ_CONTACTS;
@@ -67,7 +65,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 			public void onPermissionsDenied()
 			{
 				Toast.makeText(MainActivity.this, "申请多个权限失败", Toast.LENGTH_SHORT).show();
-				checkDeniedPermission();
 			}
 		}).request(READ_CONTACTS, CAMERA);
 	}
@@ -90,34 +87,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 			public void onPermissionsDenied()
 			{
 				Toast.makeText(MainActivity.this, "申请单个权限失败", Toast.LENGTH_SHORT).show();
-				checkDeniedPermission();
 			}
 		}).request(WRITE_EXTERNAL_STORAGE);
 	}
 
-	/**
-	 * 如果用户点击“不再提示”，则显示提示框，进入Setting里设置权限
-	 */
-	private void checkDeniedPermission()
-	{
-		if (PermissionRequest.hasAlwaysDeniedPermission(MainActivity.this, WRITE_EXTERNAL_STORAGE))
-		{
-			new SettingDialog(MainActivity.this).show();
-		}
-	}
-
-	/**
-	 * 用于接收SettingDialog的startActivityForResult结果{@link SettingDialog#mListener#startActivityForResult(Intent, int)}
-	 *
-	 * @param requestCode
-	 * @param resultCode
-	 * @param data
-	 */
-	@Override
-	protected void onActivityResult(int requestCode, int resultCode, Intent data)
-	{
-		super.onActivityResult(requestCode, resultCode, data);
-		System.out.println("requestCode : " + requestCode);
-		System.out.println("resultCode : " + resultCode);
-	}
 }

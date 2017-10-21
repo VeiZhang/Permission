@@ -2,11 +2,19 @@ package com.excellence.permission;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import static com.excellence.permission.PermissionRequest.hasAlwaysDeniedPermission;
+import static com.excellence.permission.PermissionRequest.hasPermission;
+import static com.excellence.permission.SettingDialog.PERMISSION_REQUEST_CODE;
 
 /**
  * <pre>
@@ -24,14 +32,16 @@ public final class PermissionActivity extends Activity
 	public static final String KEY_PERMISSIONS = "KEY_PERMISSIONS";
 
 	private static OnRationaleListener mOnRationaleListener = null;
-	private static OnRequestPermissionsListener mOnRequestPermissionsListener = null;
+	private static IPermissionListener mOnRequestPermissionsListener = null;
+
+	private List<String> mDeniedPermissions = null;
 
 	public static void setOnRationaleListener(OnRationaleListener listener)
 	{
 		mOnRationaleListener = listener;
 	}
 
-	public static void setOnRequestPermissionsListener(OnRequestPermissionsListener listener)
+	public static void setOnRequestPermissionsListener(IPermissionListener listener)
 	{
 		mOnRequestPermissionsListener = listener;
 	}
@@ -41,6 +51,7 @@ public final class PermissionActivity extends Activity
 	protected void onCreate(@Nullable Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
+
 		Intent intent = getIntent();
 		String[] permissions = intent.getStringArrayExtra(KEY_PERMISSIONS);
 		if (permissions == null || permissions.length == 0)
@@ -91,19 +102,85 @@ public final class PermissionActivity extends Activity
 	{
 		if (mOnRequestPermissionsListener != null)
 		{
-			mOnRequestPermissionsListener.onRequestPermissionsResult(permissions, grantResults);
-			mOnRequestPermissionsListener = null;
+			mDeniedPermissions = new ArrayList<>();
+			for (int i = 0; i < permissions.length; i++)
+			{
+				if (grantResults[i] != PackageManager.PERMISSION_GRANTED)
+					mDeniedPermissions.add(permissions[i]);
+			}
+
+			if (mDeniedPermissions.isEmpty())
+			{
+				permissionsGranted();
+			}
+			else
+			{
+				/**
+				 * 如果用户点击“不再提示”，则显示提示框，进入Setting里设置权限
+				 */
+				if (hasAlwaysDeniedPermission(this, mDeniedPermissions))
+				{
+					new SettingDialog(this).setOnCancelListener(new SettingDialog.OnCancelListener()
+					{
+						@Override
+						public void onCancel()
+						{
+							/**
+							 * 点击取消时，认为请求失败
+							 */
+							permissionsDenied();
+						}
+					}).show();
+				}
+				else
+				{
+					permissionsDenied();
+				}
+			}
 		}
+	}
+
+	private void permissionsGranted()
+	{
+		mOnRequestPermissionsListener.onPermissionsGranted();
+		mOnRequestPermissionsListener = null;
 		finish();
+	}
+
+	private void permissionsDenied()
+	{
+		mOnRequestPermissionsListener.onPermissionsDenied();
+		mOnRequestPermissionsListener = null;
+		finish();
+	}
+
+	/**
+	 * 进入Setting的app，申请权限结果回调
+	 *
+	 * @param requestCode
+	 * @param resultCode
+	 * @param data
+	 */
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data)
+	{
+		super.onActivityResult(requestCode, resultCode, data);
+
+		if (requestCode == PERMISSION_REQUEST_CODE)
+		{
+			if (hasPermission(this, mDeniedPermissions))
+			{
+				permissionsGranted();
+			}
+			else
+			{
+				permissionsDenied();
+			}
+		}
 	}
 
 	public interface OnRationaleListener
 	{
 		void onRationaleResult(boolean showRationale);
-	}
-
-	public interface OnRequestPermissionsListener
-	{
-		void onRequestPermissionsResult(@NonNull String[] permissions, @NonNull int[] grantResults);
 	}
 }
