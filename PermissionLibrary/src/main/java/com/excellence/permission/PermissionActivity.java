@@ -37,17 +37,17 @@ public final class PermissionActivity extends Activity
 
 	private List<String> mDeniedPermissions = new ArrayList<>();
 
-	public static void setOnRationaleListener(OnRationaleListener listener)
+	protected static void setOnRationaleListener(OnRationaleListener listener)
 	{
 		mOnRationaleListener = listener;
 	}
 
-	public static void setRequestPermissionsListener(IPermissionListener listener)
+	protected static void setRequestPermissionsListener(IPermissionListener listener)
 	{
 		mRequestPermissionsListener = listener;
 	}
 
-	public static void setRequestRationaleListener(IRationaleListener listener)
+	protected static void setRequestRationaleListener(IRationaleListener listener)
 	{
 		mRequestRationaleListener = listener;
 	}
