@@ -80,6 +80,13 @@ private void multiRequest()
     * Context是Activity类型时，执行startActivityForResult，在当前Activity中接收权限申请结果
     * Context是其他类型，则执行startActivity
 
+## 国产手机兼容
+
+* 与**targetSDKVersion**有关，targetSDKVersion < 23 ,使用`PermissionChecker.checkSelfPermission`可以判断权限，使用`ContextCompat.checkSelfPermission`判断权限不正确。
+* 国产手机可以手动关闭权限。
+* Android6.0之前的设备，可以使用`try catch`解决crash的情况。
+
+
 ## 修改日志
 | 版本 | 描述 |
 | --- | ---- |
