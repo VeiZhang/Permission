@@ -10,6 +10,7 @@ import android.support.annotation.RequiresApi;
 import android.support.annotation.Size;
 import android.support.v4.app.AppOpsManagerCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.content.PermissionChecker;
 import android.text.TextUtils;
 
 import com.excellence.permission.PermissionActivity.OnRationaleListener;
@@ -17,6 +18,9 @@ import com.excellence.permission.PermissionActivity.OnRationaleListener;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
+import static android.os.Build.VERSION.SDK_INT;
+import static android.os.Build.VERSION_CODES.M;
 
 /**
  * <pre>
@@ -92,7 +96,7 @@ public class PermissionRequest
 	public void request(IPermissionListener listener)
 	{
 		mPermissionListener = new RequestListener(listener);
-		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M)
+		if (mContext.getApplicationInfo().targetSdkVersion >= M && SDK_INT < M)
 		{
 			mPermissionListener.onPermissionsGranted();
 		}
@@ -112,7 +116,7 @@ public class PermissionRequest
 	/**
 	 * 申请权限
 	 */
-	@RequiresApi(api = Build.VERSION_CODES.M)
+	@RequiresApi(api = M)
 	public void resume()
 	{
 		PermissionActivity.setRequestPermissionsListener(mPermissionListener);
@@ -140,7 +144,7 @@ public class PermissionRequest
 		List<String> deniedPermissions = new ArrayList<>();
 		for (String permission : permissions)
 		{
-			if (ContextCompat.checkSelfPermission(context, permission) != PackageManager.PERMISSION_GRANTED)
+			if (!hasPermission(context, permission))
 				deniedPermissions.add(permission);
 		}
 		return deniedPermissions;
@@ -155,19 +159,27 @@ public class PermissionRequest
 	 */
 	public static boolean hasPermission(@NonNull Context context, @NonNull List<String> permissions)
 	{
-		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M)
+		int targetSDKVersion = context.getApplicationInfo().targetSdkVersion;
+		if (targetSDKVersion >= M && SDK_INT < M)
 			return true;
 		for (String permission : permissions)
 		{
-			String op = AppOpsManagerCompat.permissionToOp(permission);
-			if (TextUtils.isEmpty(op))
-				continue;
-			int result = AppOpsManagerCompat.noteProxyOp(context, op, context.getPackageName());
-			if (result == AppOpsManagerCompat.MODE_IGNORED)
-				return false;
-			result = ContextCompat.checkSelfPermission(context, permission);
-			if (result != PackageManager.PERMISSION_GRANTED)
-				return false;
+			if (targetSDKVersion < M)
+			{
+				return PermissionChecker.checkSelfPermission(context, permission) == PackageManager.PERMISSION_GRANTED;
+			}
+			else
+			{
+				String op = AppOpsManagerCompat.permissionToOp(permission);
+				if (TextUtils.isEmpty(op))
+					continue;
+				int result = AppOpsManagerCompat.noteProxyOp(context, op, context.getPackageName());
+				if (result == AppOpsManagerCompat.MODE_IGNORED)
+					return false;
+				result = ContextCompat.checkSelfPermission(context, permission);
+				if (result != PackageManager.PERMISSION_GRANTED)
+					return false;
+			}
 		}
 		return true;
 	}
@@ -193,7 +205,7 @@ public class PermissionRequest
 	 */
 	public static boolean hasAlwaysDeniedPermission(@NonNull Activity activity, @NonNull List<String> deniedPermissions)
 	{
-		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M)
+		if (SDK_INT < M)
 			return false;
 
 		for (String permission : deniedPermissions)
@@ -244,7 +256,7 @@ public class PermissionRequest
 	private class RationaleListener implements OnRationaleListener
 	{
 		@Override
-		@RequiresApi(api = Build.VERSION_CODES.M)
+		@RequiresApi(api = M)
 		public void onRationaleResult(boolean showRationale)
 		{
 			resume();

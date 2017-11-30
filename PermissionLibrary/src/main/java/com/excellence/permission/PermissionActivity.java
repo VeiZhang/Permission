@@ -2,7 +2,6 @@ package com.excellence.permission;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -35,6 +34,7 @@ public final class PermissionActivity extends Activity
 	private static IPermissionListener mRequestPermissionsListener = null;
 	private static IRationaleListener mRequestRationaleListener = null;
 
+	private List<String> mPermissions = new ArrayList<>();
 	private List<String> mDeniedPermissions = new ArrayList<>();
 
 	protected static void setOnRationaleListener(OnRationaleListener listener)
@@ -59,8 +59,8 @@ public final class PermissionActivity extends Activity
 		super.onCreate(savedInstanceState);
 
 		Intent intent = getIntent();
-		List<String> permissions = intent.getStringArrayListExtra(KEY_PERMISSIONS);
-		if (permissions == null || permissions.size() == 0)
+		mPermissions = intent.getStringArrayListExtra(KEY_PERMISSIONS);
+		if (mPermissions == null || mPermissions.size() == 0)
 		{
 			mOnRationaleListener = null;
 			mRequestPermissionsListener = null;
@@ -71,7 +71,7 @@ public final class PermissionActivity extends Activity
 		if (mOnRationaleListener != null)
 		{
 			boolean rationale = false;
-			for (String permission : permissions)
+			for (String permission : mPermissions)
 			{
 				/**
 				 * 权限拒绝策略
@@ -100,7 +100,7 @@ public final class PermissionActivity extends Activity
 		}
 
 		if (mRequestPermissionsListener != null)
-			requestPermissions(permissions.toArray(new String[permissions.size()]), 1);
+			requestPermissions(mPermissions.toArray(new String[mPermissions.size()]), 1);
 	}
 
 	@Override
@@ -108,10 +108,10 @@ public final class PermissionActivity extends Activity
 	{
 		if (mRequestPermissionsListener != null)
 		{
-			for (int i = 0; i < permissions.length; i++)
+			for (String permission : mPermissions)
 			{
-				if (grantResults[i] != PackageManager.PERMISSION_GRANTED)
-					mDeniedPermissions.add(permissions[i]);
+				if (!hasPermission(this, permission))
+					mDeniedPermissions.add(permission);
 			}
 
 			if (mDeniedPermissions.isEmpty())
