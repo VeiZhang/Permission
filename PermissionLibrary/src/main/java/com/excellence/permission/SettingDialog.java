@@ -9,6 +9,8 @@ import android.net.Uri;
 import android.provider.Settings;
 import android.support.annotation.StringRes;
 
+import static com.excellence.permission.page.PermissionPage.PERMISSION_REQUEST_CODE;
+
 /**
  * <pre>
  *     author : VeiZhang
@@ -20,8 +22,6 @@ import android.support.annotation.StringRes;
 
 public class SettingDialog
 {
-	public static final int PERMISSION_REQUEST_CODE = 1024;
-
 	private AlertDialog.Builder mBuilder = null;
 	private Context mContext = null;
 	private OnCancelListener mOnCancelListener = null;
