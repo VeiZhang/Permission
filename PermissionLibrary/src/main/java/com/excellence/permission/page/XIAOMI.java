@@ -38,7 +38,6 @@ public class XIAOMI extends PermissionPage
 	{
 		Intent intent = new Intent();
 		String miuiInfo = getSystemProperty();
-		intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 		if (miuiInfo.contains(MIUI_6) || miuiInfo.contains(MIUI_7))
 		{
 			intent = new Intent(MIUI_7_INTENT);

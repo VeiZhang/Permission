@@ -27,7 +27,6 @@ public class VIVO extends PermissionPage
 	public Intent settingIntent() throws Exception
 	{
 		Intent intent = new Intent();
-		intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 		intent.putExtra(PACKAGE_TAG, mContext.getPackageName());
 		ComponentName componentName = new ComponentName(SETTING_PKG, MANAGER_OUT_CLS);
 		intent.setComponent(componentName);

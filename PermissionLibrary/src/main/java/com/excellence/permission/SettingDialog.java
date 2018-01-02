@@ -5,9 +5,9 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.net.Uri;
-import android.provider.Settings;
 import android.support.annotation.StringRes;
+
+import com.excellence.permission.page.PermissionPageManager;
 
 import static com.excellence.permission.page.PermissionPage.PERMISSION_REQUEST_CODE;
 
@@ -95,13 +95,16 @@ public class SettingDialog
 			switch (which)
 			{
 			case DialogInterface.BUTTON_POSITIVE:
-				Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
-				Uri uri = Uri.fromParts("package", mContext.getPackageName(), null);
-				intent.setData(uri);
+				Intent intent = PermissionPageManager.getSettingIntent(mContext);
 				if (mContext instanceof Activity)
+				{
 					((Activity) mContext).startActivityForResult(intent, PERMISSION_REQUEST_CODE);
+				}
 				else
+				{
+					intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 					mContext.startActivity(intent);
+				}
 				break;
 
 			case DialogInterface.BUTTON_NEGATIVE:

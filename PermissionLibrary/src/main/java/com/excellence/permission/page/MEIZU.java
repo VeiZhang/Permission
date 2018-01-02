@@ -29,7 +29,6 @@ public class MEIZU extends PermissionPage
 	public Intent settingIntent() throws Exception
 	{
 		Intent intent = new Intent();
-		intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 		intent.putExtra(PACKAGE_TAG, mContext.getPackageName());
 		ComponentName componentName = new ComponentName(SETTING_PKG, getManagerCls());
 		intent.setComponent(componentName);
