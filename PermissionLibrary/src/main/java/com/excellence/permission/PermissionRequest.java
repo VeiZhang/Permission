@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
 import android.support.annotation.Size;
@@ -37,6 +38,7 @@ public class PermissionRequest
 	private IRationaleListener mRationaleListener = null;
 	private List<String> mRequestPermissions = null;
 	private List<String> mDeniedPermissions = null;
+	private Handler mHandler = new Handler();
 
 	@NonNull
 	public static PermissionRequest with(Context context)
@@ -74,7 +76,7 @@ public class PermissionRequest
 	/**
 	 * 默认提示{@link SettingDialog#show}，进入Setting应用设置权限
 	 * 可以自定义弹框提示用户去设置，请参考{@link SettingDialog}
-	 * 
+	 *
 	 * @param listener
 	 * @return
 	 */
@@ -174,7 +176,7 @@ public class PermissionRequest
 
 	/**
 	 * 检测权限
-	 * 
+	 *
 	 * @param context
 	 * @param permissions
 	 * @return {@code true}:授权<br>{@code false}:未授权
@@ -207,7 +209,7 @@ public class PermissionRequest
 
 	/**
 	 * 在{@link IPermissionListener#onPermissionsDenied()}中，即在权限申请失败的时候，判断权限是否被拒绝-不再提示
-	 * 
+	 *
 	 * @param activity
 	 * @param deniedPermissions
 	 * @return {@code true}:选择“不再提示”<br>{@code false}:未选择“不再提示”
@@ -247,7 +249,14 @@ public class PermissionRequest
 		@RequiresApi(api = Build.VERSION_CODES.M)
 		public void onRationaleResult(boolean showRationale)
 		{
-			resume();
+			mHandler.post(new Runnable()
+			{
+				@Override
+				public void run()
+				{
+					resume();
+				}
+			});
 		}
 	}
 }
