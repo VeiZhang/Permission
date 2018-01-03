@@ -1,4 +1,4 @@
-package com.excellence.permission.page;
+package com.excellence.permission.support;
 
 import android.content.Context;
 import android.content.Intent;
@@ -23,13 +23,18 @@ public class PermissionPageManager
 	/**
 	 * @see android.os.Build#MANUFACTURER
 	 */
-	private static final String MANUFACTURER = Build.MANUFACTURER;
+	private static final String MANUFACTURER = Build.MANUFACTURER.toUpperCase();
 
 	private static final String MANUFACTURER_HUAWEI = "HUAWEI";
-	private static final String MANUFACTURER_XIAOMI = "XIAOMI";
-	private static final String MANUFACTURER_OPPO = "OPPO";
+	protected static final String MANUFACTURER_XIAOMI = "XIAOMI";
+	protected static final String MANUFACTURER_OPPO = "OPPO";
 	private static final String MANUFACTURER_VIVO = "VIVO";
-	private static final String MANUFACTURER_MEIZU = "MEIZU";
+	protected static final String MANUFACTURER_MEIZU = "MEIZU";
+
+	public static String getManufacturer()
+	{
+		return MANUFACTURER;
+	}
 
 	public static Intent getSettingIntent(Context context)
 	{
@@ -37,7 +42,7 @@ public class PermissionPageManager
 		PermissionPage permissionPage;
 		try
 		{
-			switch (MANUFACTURER.toUpperCase())
+			switch (MANUFACTURER)
 			{
 			case MANUFACTURER_HUAWEI:
 				permissionPage = new HUAWEI(context);
@@ -71,5 +76,20 @@ public class PermissionPageManager
 			permissionPage = new Protogenesis(context);
 			return ((Protogenesis) permissionPage).settingIntent();
 		}
+	}
+
+	public static boolean isXIAOMO()
+	{
+		return getManufacturer().equalsIgnoreCase(MANUFACTURER_XIAOMI);
+	}
+
+	public static boolean isOPPO()
+	{
+		return getManufacturer().equalsIgnoreCase(MANUFACTURER_OPPO);
+	}
+
+	public static boolean isMEIZU()
+	{
+		return getManufacturer().equalsIgnoreCase(MANUFACTURER_MEIZU);
 	}
 }

@@ -1,20 +1,19 @@
 package com.excellence.permission;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.annotation.RequiresApi;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.excellence.permission.PermissionRequest.hasAlwaysDeniedPermission;
-import static com.excellence.permission.PermissionRequest.hasPermission;
-import static com.excellence.permission.page.PermissionPage.PERMISSION_REQUEST_CODE;
+import static com.excellence.permission.apply.PermissionsChecker.hasAlwaysDeniedPermission;
+import static com.excellence.permission.apply.PermissionsChecker.hasPermission;
+import static com.excellence.permission.support.PermissionPage.PERMISSION_REQUEST_CODE;
 
 /**
  * <pre>
@@ -25,6 +24,7 @@ import static com.excellence.permission.page.PermissionPage.PERMISSION_REQUEST_C
  * </pre>
  */
 
+@SuppressLint("NewApi")
 public final class PermissionActivity extends Activity
 {
 	public static final String TAG = PermissionActivity.class.getSimpleName();
@@ -53,7 +53,6 @@ public final class PermissionActivity extends Activity
 	}
 
 	@Override
-	@RequiresApi(api = Build.VERSION_CODES.M)
 	protected void onCreate(@Nullable Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);

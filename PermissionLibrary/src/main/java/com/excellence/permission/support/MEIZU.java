@@ -1,9 +1,8 @@
-package com.excellence.permission.page;
+package com.excellence.permission.support;
 
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
-import android.os.Build;
 
 /**
  * <pre>
@@ -37,7 +36,7 @@ public class MEIZU extends PermissionPage
 
 	private String getManagerCls()
 	{
-		if (isAndroidL())
+		if (ManufacturerSupport.isAndroidL())
 		{
 			return L_MANAGER_OUT_CLS;
 		}
@@ -47,8 +46,4 @@ public class MEIZU extends PermissionPage
 		}
 	}
 
-	private boolean isAndroidL()
-	{
-		return Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP && Build.VERSION.SDK_INT < Build.VERSION_CODES.M;
-	}
 }

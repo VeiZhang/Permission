@@ -1,4 +1,4 @@
-package com.excellence.permission.page;
+package com.excellence.permission.support;
 
 import android.content.Context;
 import android.content.Intent;

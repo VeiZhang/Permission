@@ -7,9 +7,9 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.annotation.StringRes;
 
-import com.excellence.permission.page.PermissionPageManager;
+import com.excellence.permission.support.PermissionPageManager;
 
-import static com.excellence.permission.page.PermissionPage.PERMISSION_REQUEST_CODE;
+import static com.excellence.permission.support.PermissionPage.PERMISSION_REQUEST_CODE;
 
 /**
  * <pre>

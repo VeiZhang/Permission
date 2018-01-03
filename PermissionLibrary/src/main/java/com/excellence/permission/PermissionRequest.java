@@ -1,17 +1,13 @@
 package com.excellence.permission;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Handler;
 import android.support.annotation.NonNull;
-import android.support.annotation.RequiresApi;
 import android.support.annotation.Size;
-import android.support.v4.app.AppOpsManagerCompat;
 import android.support.v4.content.ContextCompat;
-import android.text.TextUtils;
 
 import com.excellence.permission.PermissionActivity.OnRationaleListener;
 
@@ -114,7 +110,6 @@ public class PermissionRequest
 	/**
 	 * 申请权限
 	 */
-	@RequiresApi(api = Build.VERSION_CODES.M)
 	public void resume()
 	{
 		PermissionActivity.setRequestPermissionsListener(mPermissionListener);
@@ -148,77 +143,6 @@ public class PermissionRequest
 		return deniedPermissions;
 	}
 
-	/**
-	 * 检测权限
-	 *
-	 * @param context
-	 * @param permissions
-	 * @return {@code true}:授权<br>{@code false}:未授权
-	 */
-	public static boolean hasPermission(@NonNull Context context, @NonNull List<String> permissions)
-	{
-		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M)
-			return true;
-		for (String permission : permissions)
-		{
-			String op = AppOpsManagerCompat.permissionToOp(permission);
-			if (TextUtils.isEmpty(op))
-				continue;
-			int result = AppOpsManagerCompat.noteProxyOp(context, op, context.getPackageName());
-			if (result == AppOpsManagerCompat.MODE_IGNORED)
-				return false;
-			result = ContextCompat.checkSelfPermission(context, permission);
-			if (result != PackageManager.PERMISSION_GRANTED)
-				return false;
-		}
-		return true;
-	}
-
-	/**
-	 * 检测权限
-	 *
-	 * @param context
-	 * @param permissions
-	 * @return {@code true}:授权<br>{@code false}:未授权
-	 */
-	public static boolean hasPermission(@NonNull Context context, @NonNull String... permissions)
-	{
-		return hasPermission(context, Arrays.asList(permissions));
-	}
-
-	/**
-	 * 在{@link IPermissionListener#onPermissionsDenied()}中，即在权限申请失败的时候，判断权限是否被拒绝-不再提示
-	 *
-	 * @param activity
-	 * @param deniedPermissions
-	 * @return {@code true}:选择“不再提示”<br>{@code false}:未选择“不再提示”
-	 */
-	public static boolean hasAlwaysDeniedPermission(@NonNull Activity activity, @NonNull List<String> deniedPermissions)
-	{
-		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M)
-			return false;
-
-		for (String permission : deniedPermissions)
-		{
-			boolean rationale = activity.shouldShowRequestPermissionRationale(permission);
-			if (!rationale)
-				return true;
-		}
-		return false;
-	}
-
-	/**
-	 * 在{@link IPermissionListener#onPermissionsDenied()}中，即在权限申请失败的时候，判断权限是否被拒绝-不再提示
-	 *
-	 * @param activity
-	 * @param deniedPermissions
-	 * @return {@code true}:选择“不再提示”<br>{@code false}:未选择“不再提示”
-	 */
-	public static boolean hasAlwaysDeniedPermission(@NonNull Activity activity, @NonNull String... deniedPermissions)
-	{
-		return hasAlwaysDeniedPermission(activity, Arrays.asList(deniedPermissions));
-	}
-
 	private class RequestListener implements IPermissionListener
 	{
 		private IPermissionListener mListener = null;
@@ -246,7 +170,6 @@ public class PermissionRequest
 	private class RationaleListener implements OnRationaleListener
 	{
 		@Override
-		@RequiresApi(api = Build.VERSION_CODES.M)
 		public void onRationaleResult(boolean showRationale)
 		{
 			mHandler.post(new Runnable()
