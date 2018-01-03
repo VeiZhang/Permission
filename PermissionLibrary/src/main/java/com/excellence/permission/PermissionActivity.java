@@ -14,7 +14,7 @@ import java.util.List;
 
 import static com.excellence.permission.PermissionRequest.hasAlwaysDeniedPermission;
 import static com.excellence.permission.PermissionRequest.hasPermission;
-import static com.excellence.permission.SettingDialog.PERMISSION_REQUEST_CODE;
+import static com.excellence.permission.page.PermissionPage.PERMISSION_REQUEST_CODE;
 
 /**
  * <pre>
