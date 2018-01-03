@@ -6,7 +6,7 @@
 [![Download][icon_download]][download]
 
 ```
-compile 'com.excellence:permission:1.0.0'
+compile 'com.excellence:permission:1.0.1'
 ```
 
 ## 说明
@@ -90,11 +90,19 @@ private void multiRequest()
 ## 修改日志
 | 版本 | 描述 |
 | --- | ---- |
+| [1.0.1][permission1.0.1] | 增加国产机型权限检测、权限界面跳转 **2018-01-03** |
 | [1.0.0][permission1.0.0] | Android6.0动态申请权限 **2017-10-21** |
+
+## 感谢
+
+>- [jokermonn][jokermonn]
+>- [yanzhenjie][yanzhenjie]
 
 <!-- 网站链接 -->
 
 [download]:https://bintray.com/veizhang/maven/permission/_latestVersion "Latest version"
+[jokermonn]:https://github.com/jokermonn/permissions4m
+[yanzhenjie]:https://github.com/yanzhenjie/AndPermission
 
 <!-- 图片链接 -->
 
@@ -106,4 +114,5 @@ private void multiRequest()
 
 <!-- 版本 -->
 
+[permission1.0.1]:https://bintray.com/veizhang/maven/permission/1.0.1
 [permission1.0.0]:https://bintray.com/veizhang/maven/permission/1.0.0

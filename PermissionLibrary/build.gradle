@@ -7,7 +7,7 @@ buildscript {
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:2.3.3'
-        classpath 'com.novoda:bintray-release:0.3.4'
+        classpath 'com.novoda:bintray-release:0.8.0'
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
     }
@@ -77,7 +77,7 @@ publish {
     userOrg = 'veizhang'
     groupId = 'com.excellence'
     artifactId = 'permission'
-    publishVersion = '1.0.0'
+    publishVersion = '1.0.1'
     desc = 'Android权限管理'
     website = 'https://github.com/VeiZhang/Permission'
     licences = ['Apache-2.0']
