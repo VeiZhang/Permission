@@ -87,20 +87,13 @@ public class PermissionRequest
 	public void request(IPermissionListener listener)
 	{
 		mPermissionListener = new RequestListener(listener);
-		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M)
+		if (mRequestPermissions.size() > 0)
 		{
-			mPermissionListener.onPermissionsGranted();
+			PermissionActivity.setOnRationaleListener(new RationaleListener());
+			startPermissionActivity();
 		}
 		else
-		{
-			if (mRequestPermissions.size() > 0)
-			{
-				PermissionActivity.setOnRationaleListener(new RationaleListener());
-				startPermissionActivity();
-			}
-			else
-				mPermissionListener.onPermissionsGranted();
-		}
+			mPermissionListener.onPermissionsGranted();
 	}
 
 	/**
