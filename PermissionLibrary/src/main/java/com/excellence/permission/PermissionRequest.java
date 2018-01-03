@@ -8,7 +8,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Size;
 
 import com.excellence.permission.PermissionActivity.OnRationaleListener;
-import com.excellence.permission.apply.PermissionsChecker;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -32,7 +31,6 @@ public class PermissionRequest
 	private IPermissionListener mPermissionListener = null;
 	private IRationaleListener mRationaleListener = null;
 	private List<String> mRequestPermissions = null;
-	private List<String> mDeniedPermissions = null;
 	private Handler mHandler = new Handler();
 
 	@NonNull
@@ -95,8 +93,7 @@ public class PermissionRequest
 		}
 		else
 		{
-			mDeniedPermissions = getDeniedPermissions(mContext, mRequestPermissions);
-			if (mDeniedPermissions.size() > 0)
+			if (mRequestPermissions.size() > 0)
 			{
 				PermissionActivity.setOnRationaleListener(new RationaleListener());
 				startPermissionActivity();
@@ -119,29 +116,9 @@ public class PermissionRequest
 	private void startPermissionActivity()
 	{
 		Intent intent = new Intent(mContext, PermissionActivity.class);
-		intent.putStringArrayListExtra(PermissionActivity.KEY_PERMISSIONS, (ArrayList<String>) mDeniedPermissions);
+		intent.putStringArrayListExtra(PermissionActivity.KEY_PERMISSIONS, (ArrayList<String>) mRequestPermissions);
 		intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 		mContext.startActivity(intent);
-	}
-
-	/**
-	 * 检测未授权的权限
-	 *
-	 * @param context
-	 * @param permissions
-	 * @return 返回未授权的权限
-	 */
-	public static List<String> getDeniedPermissions(@NonNull Context context, @NonNull List<String> permissions)
-	{
-		List<String> deniedPermissions = new ArrayList<>();
-		for (String permission : permissions)
-		{
-			if (!PermissionsChecker.hasPermission(context, permission))
-			{
-				deniedPermissions.add(permission);
-			}
-		}
-		return deniedPermissions;
 	}
 
 	private class RequestListener implements IPermissionListener
