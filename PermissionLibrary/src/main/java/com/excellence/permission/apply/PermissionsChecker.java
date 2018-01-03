@@ -6,7 +6,6 @@ import android.content.ContentResolver;
 import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.Context;
-import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
@@ -16,7 +15,6 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.CalendarContract;
@@ -24,8 +22,6 @@ import android.provider.CallLog;
 import android.provider.ContactsContract;
 import android.provider.Telephony;
 import android.support.annotation.NonNull;
-import android.support.v4.app.AppOpsManagerCompat;
-import android.support.v4.content.ContextCompat;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 
@@ -61,6 +57,7 @@ import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
  * </pre>
  */
 
+@SuppressLint("NewApi")
 public class PermissionsChecker
 {
 	private static final String TAG = PermissionsChecker.class.getSimpleName();
@@ -513,18 +510,10 @@ public class PermissionsChecker
 	 */
 	public static boolean hasPermission(@NonNull Context context, @NonNull List<String> permissions)
 	{
-		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M)
-			return true;
 		for (String permission : permissions)
 		{
-			String op = AppOpsManagerCompat.permissionToOp(permission);
-			if (TextUtils.isEmpty(op))
-				continue;
-			int result = AppOpsManagerCompat.noteProxyOp(context, op, context.getPackageName());
-			if (result == AppOpsManagerCompat.MODE_IGNORED)
-				return false;
-			result = ContextCompat.checkSelfPermission(context, permission);
-			if (result != PackageManager.PERMISSION_GRANTED)
+			boolean isGranted = isPermissionGranted(context, permission);
+			if (!isGranted)
 				return false;
 		}
 		return true;
@@ -551,9 +540,6 @@ public class PermissionsChecker
 	 */
 	public static boolean hasAlwaysDeniedPermission(@NonNull Activity activity, @NonNull List<String> deniedPermissions)
 	{
-		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M)
-			return false;
-
 		for (String permission : deniedPermissions)
 		{
 			boolean rationale = activity.shouldShowRequestPermissionRationale(permission);

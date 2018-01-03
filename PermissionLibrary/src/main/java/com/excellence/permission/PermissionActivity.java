@@ -3,16 +3,15 @@ package com.excellence.permission;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
+import com.excellence.permission.apply.PermissionsChecker;
+
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.excellence.permission.apply.PermissionsChecker.hasAlwaysDeniedPermission;
-import static com.excellence.permission.apply.PermissionsChecker.hasPermission;
 import static com.excellence.permission.support.PermissionPage.PERMISSION_REQUEST_CODE;
 
 /**
@@ -109,7 +108,7 @@ public final class PermissionActivity extends Activity
 		{
 			for (int i = 0; i < permissions.length; i++)
 			{
-				if (grantResults[i] != PackageManager.PERMISSION_GRANTED)
+				if (!PermissionsChecker.hasPermission(this, permissions[i]))
 					mDeniedPermissions.add(permissions[i]);
 			}
 
@@ -122,7 +121,7 @@ public final class PermissionActivity extends Activity
 				/**
 				 * 如果用户点击“不再提示”，则显示提示框，进入Setting里设置权限
 				 */
-				if (hasAlwaysDeniedPermission(this, mDeniedPermissions))
+				if (PermissionsChecker.hasAlwaysDeniedPermission(this, mDeniedPermissions))
 				{
 					if (mRequestRationaleListener != null)
 					{
@@ -181,7 +180,7 @@ public final class PermissionActivity extends Activity
 
 		if (requestCode == PERMISSION_REQUEST_CODE)
 		{
-			if (hasPermission(this, mDeniedPermissions))
+			if (PermissionsChecker.hasPermission(this, mDeniedPermissions))
 			{
 				permissionsGranted();
 			}

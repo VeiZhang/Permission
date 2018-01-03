@@ -2,14 +2,13 @@ package com.excellence.permission;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Size;
-import android.support.v4.content.ContextCompat;
 
 import com.excellence.permission.PermissionActivity.OnRationaleListener;
+import com.excellence.permission.apply.PermissionsChecker;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -137,8 +136,10 @@ public class PermissionRequest
 		List<String> deniedPermissions = new ArrayList<>();
 		for (String permission : permissions)
 		{
-			if (ContextCompat.checkSelfPermission(context, permission) != PackageManager.PERMISSION_GRANTED)
+			if (!PermissionsChecker.hasPermission(context, permission))
+			{
 				deniedPermissions.add(permission);
+			}
 		}
 		return deniedPermissions;
 	}
