@@ -152,7 +152,8 @@ public final class PermissionActivity extends Activity
 
 	public void permissionsGranted()
 	{
-		mRequestPermissionsListener.onPermissionsGranted();
+		if (mRequestPermissionsListener != null)
+			mRequestPermissionsListener.onPermissionsGranted();
 		mRequestPermissionsListener = null;
 		mRequestRationaleListener = null;
 		finish();
@@ -160,7 +161,8 @@ public final class PermissionActivity extends Activity
 
 	public void permissionsDenied()
 	{
-		mRequestPermissionsListener.onPermissionsDenied();
+		if (mRequestPermissionsListener != null)
+			mRequestPermissionsListener.onPermissionsDenied();
 		mRequestPermissionsListener = null;
 		mRequestRationaleListener = null;
 		finish();
