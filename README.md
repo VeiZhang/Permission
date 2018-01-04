@@ -1,6 +1,6 @@
-# Android6.0时代权限管理
+# Android权限管理
 
-在Android6.0以后某些权限需要动态申请，对权限进行封装管理，方便使用时申请权限回调。
+Android手机权限申请，对权限进行封装管理，方便使用时申请权限回调。不只是Android6.0+，国产机在Android6.0之前的版本也有权限的操作，借助[permissions4m][jokermonn]的思路，对国产机强制申请。
 
 
 [![Download][icon_download]][download]
@@ -11,7 +11,7 @@ compile 'com.excellence:permission:1.0.1'
 
 ## 说明
 
-Android6.0以后，动态申请权限，用户点击来确定是否授权，分三种情况：授权、拒绝、拒绝-不再提示。前两种比较好理解，第三种“拒绝-不再提示”，即用户选择了“不再提示”，则再次使用动态权限申请，不弹出授权框，用户无法授权，这种情况在授权失败处，检测是否“不再提示”，选中“不再提示”后下次申请，系统权限申请框没反应，只能自定义弹框：提示用户进入Setting，让用户进入Setting的apk中授权。
+Android申请权限，用户点击来确定是否授权，分三种情况：授权、拒绝、拒绝-不再提示。前两种比较好理解，第三种“拒绝-不再提示”，即用户选择了“不再提示”，则再次使用动态权限申请，不弹出授权框，用户无法授权，这种情况在授权失败处，检测是否“不再提示”，选中“不再提示”后下次申请，系统权限申请框没反应，只能自定义弹框：提示用户进入Setting，让用户进入Setting的apk中授权。
 
 * 申请权限-系统弹框
 ![icon_permission_request][icon_permission_request]
@@ -82,16 +82,16 @@ private void multiRequest()
 
 ## 国产手机兼容
 
-* 与**targetSDKVersion**有关，targetSDKVersion < 23 ,使用`PermissionChecker.checkSelfPermission`可以判断权限，使用`ContextCompat.checkSelfPermission`判断权限不正确。
-* 国产手机可以手动关闭权限。
-* Android6.0之前的设备，可以使用`try catch`解决crash的情况。
+* 原生的Android6.0权限与**targetSDKVersion**有关，targetSDKVersion < 23 ,使用`PermissionChecker.checkSelfPermission`判断权限；targetSDKVersion >= 23时使用`ContextCompat.checkSelfPermission`判断权限。
+* 有些国产机使用原生申请方法无效，因此强制申请：通过触发权限功能+`try catch`的方式，判断是否有权限，然后根据不同的机型跳转到对应的权限管理界面。
+* 国产手机6.0以前可以手动关闭权限。
 
 
 ## 修改日志
 | 版本 | 描述 |
 | --- | ---- |
 | [1.0.1][permission1.0.1] | 增加国产机型权限检测、权限界面跳转 **2018-01-03** |
-| [1.0.0][permission1.0.0] | Android6.0动态申请权限 **2017-10-21** |
+| [1.0.0][permission1.0.0] | Android6.0原生动态申请权限 **2017-10-21** |
 
 ## 感谢
 
