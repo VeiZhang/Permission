@@ -55,4 +55,18 @@ public class ManufacturerSupport
 	{
 		return Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP && Build.VERSION.SDK_INT < Build.VERSION_CODES.M;
 	}
+
+	/**
+	 * 1.is under {@link android.os.Build.VERSION_CODES#M}, above {@link android.os.Build.VERSION_CODES#LOLLIPOP}
+	 * 2.has permissions check
+	 * 3.open under check
+	 * <p>
+	 * now, we know {@link PermissionPageManager#isXIAOMO()}, {@link PermissionPageManager#isMEIZU()}
+	 *
+	 * @return
+	 */
+	public static boolean isUnderMNeedChecked()
+	{
+		return isUnderMHasPermissionRequestManufacturer() && isAndroidL();
+	}
 }

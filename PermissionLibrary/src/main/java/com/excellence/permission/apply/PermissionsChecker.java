@@ -6,6 +6,7 @@ import android.content.ContentResolver;
 import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
@@ -15,6 +16,7 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.CalendarContract;
@@ -22,6 +24,8 @@ import android.provider.CallLog;
 import android.provider.ContactsContract;
 import android.provider.Telephony;
 import android.support.annotation.NonNull;
+import android.support.v4.app.AppOpsManagerCompat;
+import android.support.v4.content.ContextCompat;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 
@@ -502,6 +506,47 @@ public class PermissionsChecker
 	}
 
 	/**
+	 * 权限判断
+	 * <p>
+	 * 1.国产机>=23 双重验证[可以考虑定制化，针对某些机型，用来区分原生Android机]
+	 * 2.国产机<23 定制化
+	 * 3.原生Android机>=23 双重验证[可以考虑定制化，针对某些机型，用来区分原生Android机]
+	 *
+	 * @param context
+	 * @param permission
+	 * @return
+	 */
+	public static boolean hasPermission(@NonNull Context context, @NonNull String permission)
+	{
+		if (ManufacturerSupport.isUnderMNeedChecked())
+		{
+			return isPermissionGranted(context, permission);
+		}
+		else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
+		{
+			if (ContextCompat.checkSelfPermission(context, permission) == PackageManager.PERMISSION_GRANTED)
+			{
+				return isPermissionGranted(context, permission);
+			}
+			else
+				return false;
+		}
+		else
+		{
+			String op = AppOpsManagerCompat.permissionToOp(permission);
+			if (TextUtils.isEmpty(op))
+				return true;
+			int result = AppOpsManagerCompat.noteProxyOp(context, op, context.getPackageName());
+			if (result == AppOpsManagerCompat.MODE_IGNORED)
+				return false;
+			result = ContextCompat.checkSelfPermission(context, permission);
+			if (result != PackageManager.PERMISSION_GRANTED)
+				return false;
+		}
+		return true;
+	}
+
+	/**
 	 * 检测权限
 	 *
 	 * @param context
@@ -512,7 +557,7 @@ public class PermissionsChecker
 	{
 		for (String permission : permissions)
 		{
-			boolean isGranted = isPermissionGranted(context, permission);
+			boolean isGranted = hasPermission(context, permission);
 			if (!isGranted)
 				return false;
 		}
