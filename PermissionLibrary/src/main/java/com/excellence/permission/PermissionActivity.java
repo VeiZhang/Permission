@@ -1,8 +1,8 @@
 package com.excellence.permission;
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -23,7 +23,6 @@ import static com.excellence.permission.support.PermissionPage.PERMISSION_REQUES
  * </pre>
  */
 
-@SuppressLint("NewApi")
 public final class PermissionActivity extends Activity
 {
 	public static final String TAG = PermissionActivity.class.getSimpleName();
@@ -87,7 +86,10 @@ public final class PermissionActivity extends Activity
 				 *
 				 * 如果想判断是否拒绝权限，需要在请求一次之后的Failure回调里，再次执行{@link #shouldShowRequestPermissionRationale}方法，返回false为拒绝
 				 */
-				rationale = shouldShowRequestPermissionRationale(permission);
+				if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
+				{
+					rationale = shouldShowRequestPermissionRationale(permission);
+				}
 				if (rationale)
 					break;
 			}
@@ -98,11 +100,23 @@ public final class PermissionActivity extends Activity
 		}
 
 		if (mRequestPermissionsListener != null)
-			requestPermissions(permissions.toArray(new String[permissions.size()]), 1);
+			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
+			{
+				requestPermissions(permissions.toArray(new String[permissions.size()]), 1);
+			}
+			else
+			{
+				onRequestPermissionsResult(permissions.toArray(new String[permissions.size()]));
+			}
 	}
 
 	@Override
 	public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults)
+	{
+		onRequestPermissionsResult(permissions);
+	}
+
+	private void onRequestPermissionsResult(String[] permissions)
 	{
 		if (mRequestPermissionsListener != null)
 		{

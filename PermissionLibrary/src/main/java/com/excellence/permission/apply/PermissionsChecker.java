@@ -61,7 +61,6 @@ import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
  * </pre>
  */
 
-@SuppressLint("NewApi")
 public class PermissionsChecker
 {
 	private static final String TAG = PermissionsChecker.class.getSimpleName();
@@ -138,10 +137,14 @@ public class PermissionsChecker
 	 * @return
 	 * @throws Exception
 	 */
-	@SuppressLint("NewApi")
 	private static boolean checkReadSms(Context context) throws Exception
 	{
-		Cursor cursor = context.getContentResolver().query(Telephony.Sms.CONTENT_URI, null, null, null, null);
+
+		Cursor cursor = null;
+		if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.KITKAT)
+		{
+			cursor = context.getContentResolver().query(Telephony.Sms.CONTENT_URI, null, null, null, null);
+		}
 		if (cursor != null)
 		{
 			if (ManufacturerSupport.isForceManufacturer())
@@ -587,7 +590,11 @@ public class PermissionsChecker
 	{
 		for (String permission : deniedPermissions)
 		{
-			boolean rationale = activity.shouldShowRequestPermissionRationale(permission);
+			boolean rationale = false;
+			if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M)
+			{
+				rationale = activity.shouldShowRequestPermissionRationale(permission);
+			}
 			if (!rationale)
 				return true;
 		}
