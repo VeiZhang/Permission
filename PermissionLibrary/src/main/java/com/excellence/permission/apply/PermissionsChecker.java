@@ -58,6 +58,12 @@ import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
  *     time   : 2018/1/3
  *     desc   : 强制权限检测
  *     			https://github.com/jokermonn/permissions4m/blob/master/permissions4m-api/src/main/java/com/joker/api/apply/PermissionsChecker.java
+ *     			权限：{@link android.Manifest.permission#ACCESS_COARSE_LOCATION}
+ *     				 {@link android.Manifest.permission#ACCESS_FINE_LOCATION}
+ *    				 {@link android.Manifest.permission#READ_CALENDAR}
+ *    				 {@link android.Manifest.permission#READ_CALL_LOG}
+ *    				 {@link android.Manifest.permission#WRITE_CALL_LOG}
+ *    				 {@link android.Manifest.permission#READ_PHONE_STATE}
  * </pre>
  */
 
