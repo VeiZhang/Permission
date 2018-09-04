@@ -68,7 +68,7 @@ public class PermissionRequest
 
 	/**
 	 * 默认提示{@link SettingDialog#show}，进入Setting应用设置权限
-	 * 可以自定义弹框提示用户去设置，请参考{@link SettingDialog}
+	 * 当{@link IRationaleListener}不为空时，可以自定义弹框提示用户去设置，请参考{@link SettingDialog}
 	 *
 	 * @param listener
 	 * @return
@@ -93,7 +93,9 @@ public class PermissionRequest
 			startPermissionActivity();
 		}
 		else
+		{
 			mPermissionListener.onPermissionsGranted();
+		}
 	}
 
 	/**
@@ -127,14 +129,18 @@ public class PermissionRequest
 		public void onPermissionsGranted()
 		{
 			if (mListener != null)
+			{
 				mListener.onPermissionsGranted();
+			}
 		}
 
 		@Override
 		public void onPermissionsDenied()
 		{
 			if (mListener != null)
+			{
 				mListener.onPermissionsDenied();
+			}
 		}
 	}
 

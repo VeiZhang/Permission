@@ -91,7 +91,9 @@ public final class PermissionActivity extends Activity
 					rationale = shouldShowRequestPermissionRationale(permission);
 				}
 				if (rationale)
+				{
 					break;
+				}
 			}
 			mOnRationaleListener.onRationaleResult(rationale);
 			mOnRationaleListener = null;
@@ -100,6 +102,7 @@ public final class PermissionActivity extends Activity
 		}
 
 		if (mRequestPermissionsListener != null)
+		{
 			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
 			{
 				requestPermissions(permissions.toArray(new String[permissions.size()]), 1);
@@ -108,6 +111,7 @@ public final class PermissionActivity extends Activity
 			{
 				onRequestPermissionsResult(permissions.toArray(new String[permissions.size()]));
 			}
+		}
 	}
 
 	@Override
@@ -123,7 +127,9 @@ public final class PermissionActivity extends Activity
 			for (int i = 0; i < permissions.length; i++)
 			{
 				if (!PermissionsChecker.hasPermission(this, permissions[i]))
+				{
 					mDeniedPermissions.add(permissions[i]);
+				}
 			}
 
 			if (mDeniedPermissions.isEmpty())
@@ -167,7 +173,9 @@ public final class PermissionActivity extends Activity
 	public void permissionsGranted()
 	{
 		if (mRequestPermissionsListener != null)
+		{
 			mRequestPermissionsListener.onPermissionsGranted();
+		}
 		mRequestPermissionsListener = null;
 		mRequestRationaleListener = null;
 		finish();
@@ -176,7 +184,9 @@ public final class PermissionActivity extends Activity
 	public void permissionsDenied()
 	{
 		if (mRequestPermissionsListener != null)
+		{
 			mRequestPermissionsListener.onPermissionsDenied();
+		}
 		mRequestPermissionsListener = null;
 		mRequestRationaleListener = null;
 		finish();

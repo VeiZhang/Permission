@@ -538,19 +538,27 @@ public class PermissionsChecker
 				return isPermissionGranted(context, permission);
 			}
 			else
+			{
 				return false;
+			}
 		}
 		else
 		{
 			String op = AppOpsManagerCompat.permissionToOp(permission);
 			if (TextUtils.isEmpty(op))
+			{
 				return true;
+			}
 			int result = AppOpsManagerCompat.noteProxyOp(context, op, context.getPackageName());
 			if (result == AppOpsManagerCompat.MODE_IGNORED)
+			{
 				return false;
+			}
 			result = ContextCompat.checkSelfPermission(context, permission);
 			if (result != PackageManager.PERMISSION_GRANTED)
+			{
 				return false;
+			}
 		}
 		return true;
 	}
@@ -568,7 +576,9 @@ public class PermissionsChecker
 		{
 			boolean isGranted = hasPermission(context, permission);
 			if (!isGranted)
+			{
 				return false;
+			}
 		}
 		return true;
 	}
@@ -602,7 +612,9 @@ public class PermissionsChecker
 				rationale = activity.shouldShowRequestPermissionRationale(permission);
 			}
 			if (!rationale)
+			{
 				return true;
+			}
 		}
 		return false;
 	}

@@ -109,7 +109,9 @@ public class SettingDialog
 
 			case DialogInterface.BUTTON_NEGATIVE:
 				if (mOnCancelListener != null)
+				{
 					mOnCancelListener.onCancel();
+				}
 				break;
 			}
 		}
