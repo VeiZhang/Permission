@@ -17,5 +17,5 @@ public interface IRationaleListener
 	 *
 	 * @param activity
 	 */
-	void OnRationale(PermissionActivity activity);
+	void onRationale(PermissionActivity activity);
 }

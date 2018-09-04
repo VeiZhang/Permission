@@ -145,7 +145,7 @@ public final class PermissionActivity extends Activity
 				{
 					if (mRequestRationaleListener != null)
 					{
-						mRequestRationaleListener.OnRationale(this);
+						mRequestRationaleListener.onRationale(this);
 					}
 					else
 					{

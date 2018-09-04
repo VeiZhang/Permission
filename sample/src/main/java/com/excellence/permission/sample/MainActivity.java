@@ -59,7 +59,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 		PermissionRequest.with(this).rationale(new IRationaleListener()
 		{
 			@Override
-			public void OnRationale(final PermissionActivity activity)
+			public void onRationale(final PermissionActivity activity)
 			{
 				new SettingDialog(activity).setTitle("Warning").setOnCancelListener(new SettingDialog.OnCancelListener()
 				{
