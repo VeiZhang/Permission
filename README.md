@@ -6,7 +6,7 @@ Android手机权限申请，对权限进行封装管理，方便使用时申请�
 [![Download][icon_download]][download]
 
 ```
-compile 'com.excellence:permission:1.0.1'
+compile 'com.excellence:permission:_latestVersion'
 ```
 
 ## 说明
@@ -90,6 +90,7 @@ private void multiRequest()
 ## 修改日志
 | 版本 | 描述 |
 | --- | ---- |
+| [1.0.2][permission1.0.2] | 兼容低版本机型 **2019-03-28** |
 | [1.0.1][permission1.0.1] | 增加国产机型权限检测、权限界面跳转 **2018-01-03** |
 | [1.0.0][permission1.0.0] | Android6.0原生动态申请权限 **2017-10-21** |
 
@@ -114,5 +115,6 @@ private void multiRequest()
 
 <!-- 版本 -->
 
+[permission1.0.2]:https://bintray.com/veizhang/maven/permission/1.0.2
 [permission1.0.1]:https://bintray.com/veizhang/maven/permission/1.0.1
 [permission1.0.0]:https://bintray.com/veizhang/maven/permission/1.0.0

@@ -75,7 +75,7 @@ publish {
     userOrg = org
     groupId = 'com.excellence'
     artifactId = 'permission'
-    publishVersion = '1.0.1'
+    publishVersion = '1.0.2'
     desc = 'Android权限管理'
     website = 'https://github.com/VeiZhang/Permission'
     licences = ['Apache-2.0']
