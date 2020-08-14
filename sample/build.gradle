@@ -1,15 +1,19 @@
-apply plugin: 'com.android.application'
+def plugins = rootProject.ext.plugins
+def cfg = rootProject.ext.android
+def libs = rootProject.ext.dependencies
+
+apply plugin: plugins.application
 
 android {
-    compileSdkVersion 25
-    buildToolsVersion "25.0.0"
+    compileSdkVersion cfg.compileSdkVersion
+    buildToolsVersion cfg.buildToolsVersion
 
     defaultConfig {
         applicationId "com.excellence.permission.sample"
-        minSdkVersion 15
-        targetSdkVersion 25
-        versionCode 1
-        versionName "1.0"
+        minSdkVersion cfg.minSdkVersion
+        targetSdkVersion cfg.targetSdkVersion
+        versionCode cfg.versionCode
+        versionName cfg.versionName
 
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
@@ -23,12 +27,11 @@ android {
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
-    compile 'com.android.support:appcompat-v7:25.+'
-    testCompile 'junit:junit:4.12'
-    compile project(':PermissionLibrary')
-    // compile 'com.excellence:permission:1.0.1'
+    implementation libs["appcompat-v7"]
+    testImplementation 'junit:junit:4.12'
+    implementation project(':PermissionLibrary')
+    // implementation 'com.excellence:permission:1.0.1'
 }
